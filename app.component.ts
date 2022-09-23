@@ -48,6 +48,3 @@ export class AppComponent implements OnInit {
     });
   }
 }
-// fetch post methods need to be called inside the fetch method and also inside the ngOnint life cycle hook
-// it also need to subscibe in order to work
-// while using the pipe, it is necessary to use the return function so that subscribe get some data to work on
