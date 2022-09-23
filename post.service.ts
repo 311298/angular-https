@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { post } from "./post.model";
 import { map, catchError } from "rxjs/operators";
@@ -34,6 +34,7 @@ export class PostService {
           headers: new HttpHeaders({
             "cusotm-header": "hello",
           }),
+          params: new HttpParams().set("print", "pretty"),
         }
       )
       .pipe(
@@ -66,3 +67,7 @@ export class PostService {
 // fetch post methods need to be called inside the fetch method and also inside the ngOnint life cycle hook
 // it also need to subscibe in order to work
 // while using the pipe, it is necessary to use the return function so that subscribe get some data to work on
+//httpParams upon created new to appended with new key value pair but it is immutable
+//params:customParams(variable)
+// const customParams= new httpparams()
+//cutomParams=customParam.append('print','pretty')
