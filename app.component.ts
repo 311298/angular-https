@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
+import { post } from "./post.model";
 
 @Component({
   selector: "app-root",
@@ -17,12 +18,14 @@ export class AppComponent implements OnInit {
     this.fetchPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  // onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: post) {
     // Send Http request
     console.log(postData);
 
     this.http
-      .post(
+      .post<{ name: string }>(
+        // here were are passing string not form object, it is firebase special key
         "https://https-3581e-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json",
         postData
       )
@@ -44,18 +47,20 @@ export class AppComponent implements OnInit {
 
   private fetchPosts() {
     this.http
-      .get(
+      .get<{ [key: string]: post }>(
         "https://https-3581e-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json"
       )
       .pipe(
-        map((data) => {
-          console.log("data before transform ->", data);
-          console.log("key from data", Object.keys(data));
-          const postArray = [];
-          for (const key in data) {
-            if (data.hasOwnProperty(key)) {
+        // map((responseData: { [key: string]: post }) => {
+        //instead of defining inside the reponseData we can define it inside the https methods
+        map((responseData) => {
+          console.log("data before transform ->", responseData);
+          console.log("key from data", Object.keys(responseData));
+          const postArray: post[] = [];
+          for (const key in responseData) {
+            if (responseData.hasOwnProperty(key)) {
               console.log("key of the object(data) -> ", key);
-              postArray.push({ ...data[key], id: key });
+              postArray.push({ ...responseData[key], id: key });
             }
           }
           return postArray;
@@ -69,3 +74,4 @@ export class AppComponent implements OnInit {
 }
 // fetch post methods need to be called inside the fetch method and also inside the ngOnint life cycle hook
 // it also need to subscibe in order to work
+// while using the pipe, it is necessary to use the return function so that subscribe get some data to work on
