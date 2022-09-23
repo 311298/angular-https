@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
     // console.log(postData);
     this.ps.createPosts(postData.title, postData.content).subscribe({
       next: (responseData) => {
-        // console.log(responseData);
+        console.log(responseData);
       },
     });
   }

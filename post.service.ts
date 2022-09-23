@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { post } from "./post.model";
-import { map, catchError } from "rxjs/operators";
+import { map, catchError, tap } from "rxjs/operators";
 import { throwError } from "rxjs";
 
 @Injectable({ providedIn: "root" })
@@ -13,7 +13,10 @@ export class PostService {
     return this.http.post<{ name: string }>(
       // here were are passing string not form object, it is firebase special key
       "https://https-3581e-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json",
-      postData
+      postData,
+      {
+        observe: "response",
+      }
     );
     //   .subscribe((responseData) => {
     //     console.log("response data we sent -> ", responseData);
@@ -22,7 +25,10 @@ export class PostService {
 
   deletePosts() {
     return this.http.delete(
-      "https://https-3581e-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json"
+      "https://https-3581e-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json",
+      {
+        observe: "events",
+      }
     );
   }
 
@@ -35,6 +41,7 @@ export class PostService {
             "cusotm-header": "hello",
           }),
           params: new HttpParams().set("print", "pretty"),
+          responseType: "json",
         }
       )
       .pipe(
