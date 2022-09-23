@@ -1,7 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { post } from "./post.model";
-import { map } from "rxjs/operators";
+import { map, catchError } from "rxjs/operators";
+import { throwError } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class PostService {
@@ -44,6 +45,9 @@ export class PostService {
             }
           }
           return postArray;
+        }),
+        catchError((error) => {
+          throw error;
         })
       );
     //   .subscribe((post) => {
