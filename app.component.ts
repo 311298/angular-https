@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
         this.isFetching = false;
       },
       error: (e) => {
+        this.isFetching = false;
         console.log(e.error.error);
         this.error = e.message;
       },
@@ -52,5 +53,9 @@ export class AppComponent implements OnInit {
     this.ps.deletePosts().subscribe(() => {
       this.loadedPosts = [];
     });
+  }
+
+  onhandleError() {
+    this.error = null;
   }
 }
