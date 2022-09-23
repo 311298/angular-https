@@ -59,6 +59,10 @@
         </li>
       </ul>
       <p *ngIf="isFetching">loading...</p>
+      <div class="alert alert-danger">
+        <h3>error occurred!</h3>
+        <p>{{ error }}</p>
+      </div>
     </div>
   </div>
 </div>

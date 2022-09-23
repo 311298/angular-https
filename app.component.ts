@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
 import { post } from "./post.model";
 import { PostService } from "./post.service";
+import { throwError } from "rxjs";
 
 @Component({
   selector: "app-root",
@@ -12,6 +13,7 @@ import { PostService } from "./post.service";
 export class AppComponent implements OnInit {
   loadedPosts = [];
   isFetching: boolean = false;
+  error = null;
 
   constructor(private http: HttpClient, private ps: PostService) {}
 
@@ -22,12 +24,12 @@ export class AppComponent implements OnInit {
   // onCreatePost(postData: { title: string; content: string }) {
   onCreatePost(postData: post) {
     // Send Http request
-    console.log(postData);
-    this.ps
-      .createPosts(postData.title, postData.content)
-      .subscribe((responseData) => {
-        console.log(responseData);
-      });
+    // console.log(postData);
+    this.ps.createPosts(postData.title, postData.content).subscribe({
+      next: (responseData) => {
+        // console.log(responseData);
+      },
+    });
   }
   //post takes 2 arguments url and data
   //2 post request are send first one is option ( check whether allowed or not) and another request is we send body
@@ -35,9 +37,15 @@ export class AppComponent implements OnInit {
   onFetchPosts() {
     this.isFetching = true;
     // Send Http request
-    this.ps.fetchPosts().subscribe((responseData) => {
-      this.loadedPosts = responseData;
-      this.isFetching = false;
+    this.ps.fetchPosts().subscribe({
+      next: (responseData) => {
+        this.loadedPosts = responseData;
+        this.isFetching = false;
+      },
+      error: (e) => {
+        console.log(e.error.error);
+        this.error = e.message;
+      },
     });
   }
 
